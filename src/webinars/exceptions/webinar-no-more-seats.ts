@@ -1,6 +1,6 @@
 export class WebinarNoMoreAvailableSeatsException extends Error {
     constructor() {
-      super('Webinar does not have any more seats');
+      super('Webinar must have at least 1 seat');
       this.name = 'WebinarNoMoreSeatsException';
     }
   }

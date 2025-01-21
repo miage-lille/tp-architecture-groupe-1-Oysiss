@@ -1,6 +1,6 @@
 export class WebinarAlreadyBookedException extends Error {
     constructor() {
-      super('Webinar already booked by user');
+      super('User already registered for this webinar');
       this.name = 'WebinarAlreadyBookedException';
     }
   }

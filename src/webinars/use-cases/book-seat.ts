@@ -1,4 +1,4 @@
-import { IMailer } from 'src/core/ports/mailer.interface';
+import { InMemoryMailer } from 'src/core/adapters/in-memory-mailer';
 import { Executable } from 'src/shared/executable';
 import { User } from 'src/users/entities/user.entity';
 import { IUserRepository } from 'src/users/ports/user-repository.interface';
@@ -23,6 +23,7 @@ export class BookSeat implements Executable<Request, Response> {
   constructor(
     private readonly participationRepository: IParticipationRepository,
     private readonly webinarRepository: IWebinarRepository,
+    private readonly mailer: InMemoryMailer,
   ) {}
   async execute({ webinarId, user }: Request): Promise<Response> {
     const webinar = await this.webinarRepository.findById(webinarId);
@@ -43,6 +44,12 @@ export class BookSeat implements Executable<Request, Response> {
     const participation = new Participation({
       webinarId: webinarId,
       userId: user.props.id,
+    });
+
+    this.mailer.send({
+      to: user.props.email,
+      subject: 'You have successfully booked a seat',
+      body: `You have successfully booked a seat for the webinar "${webinar.props.title}"`,
     });
 
     return this.participationRepository.save(participation);
